@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "rcc.h": "c",
+        "gpio.h": "c",
+        "core_cm3.h": "c",
+        "nvic.h": "c",
+        "exti.h": "c",
+        "systick.h": "c",
+        "rtc.h": "c",
+        "ili9341.h": "c",
+        "dma.h": "c",
+        "stdlib.h": "c",
+        "dma_common_l1f013.h": "c",
+        "flash.h": "c"
+    }
+}
