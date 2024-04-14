@@ -118,7 +118,7 @@ void il_set_address_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
     _il_write_command_8bit(0X2A);
 
-    WITH_CS_LOCK(
+    CS_LOCK(
         IL_DC_DAT();
         IL_WRITE_8BIT((uint8_t)(x1 >> 8));
         IL_WRITE_8BIT((uint8_t)x1);
@@ -128,7 +128,7 @@ void il_set_address_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 
     _il_write_command_8bit(0X2B);
 
-    WITH_CS_LOCK(
+    CS_LOCK(
         IL_DC_DAT();
         IL_WRITE_8BIT((uint8_t)(y1 >> 8));
         IL_WRITE_8BIT((uint8_t)y1);
@@ -182,7 +182,7 @@ void il_fill_color_array(uint16_t color, uint32_t len)
 
 void il_fill_color_array_dma(uint16_t color, uint32_t len)
 {
-    WITH_CS_LOCK(
+    CS_LOCK(
         IL_DC_DAT();
         uint8_t color_high = color >> 8;
         uint8_t color_low = color;
@@ -207,4 +207,33 @@ void il_fill_screen(uint16_t color)
 {
     il_set_address_window(0, 0, IL_HEIGHT - 1, IL_WIDTH - 1);
     il_fill_color_array_dma(color, (IL_HEIGHT * IL_WIDTH));
+}
+
+void il_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+{
+    il_set_address_window(x, y, x + w - 1, y + h - 1);
+    il_fill_color_array_dma(color, (uint32_t)w * (uint32_t)h);
+}
+
+void il_set_scroll_area(uint16_t tfa, uint16_t bfa)
+{
+    CS_LOCK(
+        _il_write_command_8bit(0x33);
+        // TFS
+        _il_write_data_8bit(tfa >> 8);
+        _il_write_data_8bit(tfa);
+        // VSA
+        _il_write_data_8bit((IL_HEIGHT - tfa - bfa) >> 8);
+        _il_write_data_8bit(IL_HEIGHT - tfa - bfa);
+        // FBA
+        _il_write_data_8bit(bfa >> 8);
+        _il_write_data_8bit(bfa);)
+}
+
+void il_set_scroll_add(uint16_t vsp)
+{
+    CS_LOCK(
+        _il_write_command_8bit(0x37);
+        _il_write_data_8bit(vsp >> 8);
+        _il_write_data_8bit(vsp);)
 }

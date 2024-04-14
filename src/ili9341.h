@@ -31,10 +31,10 @@
 #define IL_CS_SET() GPIO_BRR(IL_PORT) = IL_CS
 #define IL_CS_CLR() GPIO_BSRR(IL_PORT) = IL_CS
 
-#define WITH_CS_LOCK(x) \
-	{                   \
-		IL_CS_SET();    \
-		x IL_CS_CLR();  \
+#define CS_LOCK(x)     \
+	{                  \
+		IL_CS_SET();   \
+		x IL_CS_CLR(); \
 	}
 
 /**
@@ -147,7 +147,7 @@ __attribute__((always_inline)) static inline void _il_write_spi_dma(void *data_a
  */
 __attribute__((always_inline)) static inline void _il_write_command_8bit(uint8_t comamnd)
 {
-	WITH_CS_LOCK(
+	CS_LOCK(
 		IL_DC_CMD();
 		IL_WRITE_8BIT(comamnd););
 }
@@ -157,7 +157,7 @@ __attribute__((always_inline)) static inline void _il_write_command_8bit(uint8_t
  */
 __attribute__((always_inline)) static inline void _il_write_data_8bit(uint8_t data)
 {
-	WITH_CS_LOCK(
+	CS_LOCK(
 		IL_DC_DAT();
 		IL_WRITE_8BIT(data);)
 }
@@ -167,7 +167,7 @@ __attribute__((always_inline)) static inline void _il_write_data_8bit(uint8_t da
  */
 __attribute__((always_inline)) static inline void _il_write_data_16bit(uint16_t data)
 {
-	WITH_CS_LOCK(
+	CS_LOCK(
 		IL_DC_DAT();
 		IL_WRITE_8BIT((uint8_t)(data >> 8));
 		IL_WRITE_8BIT((uint8_t)data););
@@ -188,5 +188,11 @@ void il_fill_color_array(uint16_t color, uint32_t len);
 void il_fill_color_array_dma(uint16_t color, uint32_t len);
 
 void il_fill_screen(uint16_t color);
+
+void il_set_scroll_area(uint16_t tfa, uint16_t bfa);
+
+void il_set_scroll_add(uint16_t vsp);
+
+void il_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
 #endif
