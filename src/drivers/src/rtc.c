@@ -1,4 +1,4 @@
-#include "rtc.h"
+#include "../inc/rtc.h"
 
 #include "libopencm3/stm32/rcc.h"
 #include "libopencm3/stm32/rtc.h"

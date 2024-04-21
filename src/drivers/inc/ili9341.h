@@ -179,20 +179,53 @@ __attribute__((always_inline)) static inline void _il_write_data_16bit(uint16_t 
 
 // functions define
 
+/**
+ * @brief il9341初始化
+ */
 void il_init(void);
 
-void il_set_address_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
-
-void il_fill_color_array(uint16_t color, uint32_t len);
-
-void il_fill_color_array_dma(uint16_t color, uint32_t len);
-
-void il_fill_screen(uint16_t color);
-
+/**
+ * @brief 设置屏幕滚动区域
+ */
 void il_set_scroll_area(uint16_t tfa, uint16_t bfa);
 
+/**
+ * @brief 设置屏幕滚动值
+ */
 void il_set_scroll_add(uint16_t vsp);
 
+/**
+ * @brief 准备一个矩形地址用于写入颜色
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ */
+void il_set_address_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+
+/**
+ * @brief 发送颜色数据
+ */
+void il_fill_color_array(uint16_t color, uint32_t len);
+
+/**
+ * @brief 以dma方式发送颜色数据
+ */
+void il_fill_color_array_dma(uint16_t color, uint32_t len);
+
+/**
+ * @brief 填充整个屏幕
+ */
+void il_fill_screen(uint16_t color);
+
+/**
+ * @brief 填充一个矩形
+ */
 void il_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
+
+/**
+ * @brief 用dma填充一个矩形
+ */
+void il_fill_rect_dma(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
 
 #endif

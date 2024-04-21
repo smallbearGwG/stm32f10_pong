@@ -1,4 +1,4 @@
-#include <ili9341.h>
+#include "../inc/ili9341.h"
 
 #define DMA_BUFFER_SIZE 256
 
@@ -114,6 +114,29 @@ void il_init(void)
     _il_write_data_8bit(0xE8);
 }
 
+void il_set_scroll_area(uint16_t tfa, uint16_t bfa)
+{
+    CS_LOCK(
+        _il_write_command_8bit(0x33);
+        // TFS
+        _il_write_data_8bit(tfa >> 8);
+        _il_write_data_8bit(tfa);
+        // VSA
+        _il_write_data_8bit((IL_HEIGHT - tfa - bfa) >> 8);
+        _il_write_data_8bit(IL_HEIGHT - tfa - bfa);
+        // FBA
+        _il_write_data_8bit(bfa >> 8);
+        _il_write_data_8bit(bfa);)
+}
+
+void il_set_scroll_add(uint16_t vsp)
+{
+    CS_LOCK(
+        _il_write_command_8bit(0x37);
+        _il_write_data_8bit(vsp >> 8);
+        _il_write_data_8bit(vsp);)
+}
+
 void il_set_address_window(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
     _il_write_command_8bit(0X2A);
@@ -212,28 +235,5 @@ void il_fill_screen(uint16_t color)
 void il_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
 {
     il_set_address_window(x, y, x + w - 1, y + h - 1);
-    il_fill_color_array_dma(color, (uint32_t)w * (uint32_t)h);
-}
-
-void il_set_scroll_area(uint16_t tfa, uint16_t bfa)
-{
-    CS_LOCK(
-        _il_write_command_8bit(0x33);
-        // TFS
-        _il_write_data_8bit(tfa >> 8);
-        _il_write_data_8bit(tfa);
-        // VSA
-        _il_write_data_8bit((IL_HEIGHT - tfa - bfa) >> 8);
-        _il_write_data_8bit(IL_HEIGHT - tfa - bfa);
-        // FBA
-        _il_write_data_8bit(bfa >> 8);
-        _il_write_data_8bit(bfa);)
-}
-
-void il_set_scroll_add(uint16_t vsp)
-{
-    CS_LOCK(
-        _il_write_command_8bit(0x37);
-        _il_write_data_8bit(vsp >> 8);
-        _il_write_data_8bit(vsp);)
+    il_fill_color_array(color, (uint32_t)w * (uint32_t)h);
 }

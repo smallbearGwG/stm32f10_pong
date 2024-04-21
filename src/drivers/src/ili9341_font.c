@@ -1,4 +1,4 @@
-#include "ili9341_font.h"
+#include "../inc/ili9341_font.h"
 
 uint8_t apple_font[64][8] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, //"   "
